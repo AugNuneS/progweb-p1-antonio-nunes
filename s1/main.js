@@ -1,14 +1,26 @@
-const ContaCorrente = require('./ContaCorrente');
-const ContaPoupanca = require('./ContaPoupanca');
+import { Conta } from './Conta.js';
+import { ContaCorrente } from './ContaCorrente.js';
+import { ContaPoupanca } from './ContaPoupanca.js';
 
-console.log("--- CHECKPOINT: DEMONSTRAÇÃO POO ---");
+const contas = [
+  new ContaCorrente('0001', 'Antonio Nunes', 500),
+  new ContaPoupanca('0002', 'Bruno Souza'),
+];
 
-const cc = new ContaCorrente("Antonio Nunes", 1000, 500);
-const cp = new ContaPoupanca("Antonio Nunes", 1000);
+contas.forEach((c) => c.depositar(1000));
 
-cc.depositar(200);
-cc.sacar(300);
-console.log(`Conta Corrente [${cc.titular}] | Saldo: R$ ${cc.saldo}`);
+function fecharMes(listaDeContas) {
+  for (const conta of listaDeContas) {
+    const tarifa = conta.tarifaMensal();
+    if (tarifa > 0) conta.sacar(tarifa);
+    console.log(`${conta} (tarifa: R$ ${tarifa.toFixed(2)})`);
+  }
+}
 
-cp.depositar(200);
-console.log(`Conta Poupança [${cp.titular}] | Saldo (com rendimento): R$ ${cp.saldo}`);
+fecharMes(contas);
+
+try {
+  new Conta('0003', 'Carla Dias');
+} catch (e) {
+  console.log('Erro esperado →', e.message);
+}

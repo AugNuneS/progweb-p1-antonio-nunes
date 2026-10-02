@@ -1,15 +1,18 @@
-const Conta = require('./Conta');
+import { Conta } from './Conta.js';
 
-class ContaPoupanca extends Conta {
-  constructor(titular, saldoInicial = 0, taxaRendimento = 0.05) {
-    super(titular, saldoInicial);
-    this.taxaRendimento = taxaRendimento;
+export class ContaPoupanca extends Conta {
+  constructor(numero, titular, taxaMensal = 0.005) {
+    super(numero, titular);
+    this.taxaMensal = taxaMensal;
   }
 
-  depositar(valor) {
-    const valorComRendimento = valor + (valor * this.taxaRendimento);
-    super.depositar(valorComRendimento);
+  render() {
+    const rendimento = this.saldo * this.taxaMensal;
+    if (rendimento > 0) this.depositar(rendimento);
+    return rendimento;
+  }
+
+  tarifaMensal() {
+    return 0;
   }
 }
-
-module.exports = ContaPoupanca;

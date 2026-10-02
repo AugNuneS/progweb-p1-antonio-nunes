@@ -1,31 +1,50 @@
-class Conta {
-  #saldo;
+export class Conta {
+  #saldo = 0;
+  #titular;
 
-  constructor(titular, saldoInicial = 0) {
+  constructor(numero, titular) {
+    if (new.target === Conta) {
+      throw new Error('Conta é abstrata: crie ContaCorrente ou ContaPoupanca');
+    }
+    this.numero = numero;
     this.titular = titular;
-    this.#saldo = saldoInicial;
   }
 
   get saldo() {
     return this.#saldo;
   }
 
-  depositar(valor) {
-    if (valor <= 0) {
-      console.log("O valor do depósito deve ser positivo.");
-      return;
+  get titular() {
+    return this.#titular;
+  }
+
+  set titular(nome) {
+    if (typeof nome !== 'string' || nome.trim().length < 3) {
+      throw new Error('Titular inválido');
     }
+    this.#titular = nome.trim();
+  }
+
+  saldoDisponivel() {
+    return this.#saldo;
+  }
+
+  depositar(valor) {
+    if (!(valor > 0)) throw new Error('Depósito deve ser positivo');
     this.#saldo += valor;
   }
 
   sacar(valor) {
-    if (valor > this.#saldo) {
-      console.log("Saldo insuficiente.");
-      return false;
-    }
+    if (!(valor > 0)) throw new Error('Saque deve ser positivo');
+    if (valor > this.saldoDisponivel()) throw new Error('Saldo insuficiente');
     this.#saldo -= valor;
-    return true;
+  }
+
+  tarifaMensal() {
+    throw new Error('tarifaMensal() precisa ser implementado na subclasse');
+  }
+
+  toString() {
+    return `${this.constructor.name} ${this.numero} · ${this.titular} · R$ ${this.saldo.toFixed(2)}`;
   }
 }
-
-module.exports = Conta;

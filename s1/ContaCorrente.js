@@ -1,27 +1,16 @@
-const Conta = require('./Conta');
+import { Conta } from './Conta.js';
 
-class ContaCorrente extends Conta {
-  constructor(titular, saldoInicial = 0, limite = 500) {
-    super(titular, saldoInicial);
+export class ContaCorrente extends Conta {
+  constructor(numero, titular, limite = 500) {
+    super(numero, titular);
     this.limite = limite;
   }
 
-  sacar(valor) {
-    if (valor > this.saldo + this.limite) {
-      console.log("Limite de crédito excedido.");
-      return false;
-    }
+  saldoDisponivel() {
+    return this.saldo + this.limite;
+  }
 
-    const saldoDisponivel = this.saldo;
-    if (valor > saldoDisponivel) {
-      const resto = valor - saldoDisponivel;
-      super.sacar(saldoDisponivel);
-      this.limite -= resto;
-    } else {
-      super.sacar(valor);
-    }
-    return true;
+  tarifaMensal() {
+    return 12.9;
   }
 }
-
-module.exports = ContaCorrente;
