@@ -1,35 +1,37 @@
-﻿let tutores = [];
-let proximoId = 1;
+﻿import { db } from '../db.js';
 
 export const tutorModel = {
   listar() {
-    return tutores;
+    return db.prepare('SELECT * FROM tutores ORDER BY id').all();
   },
 
   buscarPorId(id) {
-    return tutores.find((t) => t.id === id) ?? null;
+    return db.prepare('SELECT * FROM tutores WHERE id = ?').get(id) ?? null;
   },
 
   existeCpf(cpf) {
-    return tutores.some((t) => t.cpf === cpf);
+    const linha = db.prepare('SELECT 1 FROM tutores WHERE cpf = ?').get(cpf);
+    return linha !== undefined;
   },
 
   inserir({ nome, cpf, telefone }) {
-    const novo = { id: proximoId++, nome, cpf, telefone: telefone ?? null };
-    tutores.push(novo);
-    return novo;
+    const r = db
+      .prepare('INSERT INTO tutores (nome, cpf, telefone) VALUES (?, ?, ?)')
+      .run(nome, cpf, telefone ?? null);
+    return this.buscarPorId(r.lastInsertRowid);
   },
 
   atualizar(id, dados) {
-    const i = tutores.findIndex((t) => t.id === id);
-    if (i === -1) return null;
-    tutores[i] = { ...tutores[i], ...dados, id };
-    return tutores[i];
+    const atual = this.buscarPorId(id);
+    if (!atual) return null;
+    const novo = { ...atual, ...dados };
+    db.prepare('UPDATE tutores SET nome = ?, cpf = ?, telefone = ? WHERE id = ?')
+      .run(novo.nome, novo.cpf, novo.telefone ?? null, id);
+    return this.buscarPorId(id);
   },
 
   remover(id) {
-    const antes = tutores.length;
-    tutores = tutores.filter((t) => t.id !== id);
-    return tutores.length < antes;
+    const r = db.prepare('DELETE FROM tutores WHERE id = ?').run(id);
+    return r.changes > 0;
   },
 };
