@@ -3,9 +3,9 @@
 Sistema web fullstack para cadastro e gerenciamento de tutores e seus pets em uma clínica veterinária.
 Projeto 1 da disciplina Programação Web (UEPB, 2026.2).
 
-- **Aplicação:** (preencher após deploy na Vercel)
-- **API:** (preencher após deploy no Render)
-- **Vídeo de apresentação:** (preencher após gravação)
+- **Aplicação:** https://progweb-p1-antonio-nunes-frontend.vercel.app
+- **API:** https://progweb-p1-antonio-nunes.onrender.com
+- **Vídeo de apresentação:** https://youtu.be/25RkmTogv3Q
 
 > A API está no plano grátis do Render: o primeiro acesso pode levar cerca de
 > um minuto, e os dados voltam aos de exemplo a cada reinício do serviço.
